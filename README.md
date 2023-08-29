@@ -32,9 +32,9 @@ docker-compose --env-file ./dev.env up
 Open the [API Docs](http://localhost:8080) and start sending requests.
 
 Tips:
-- You can choose a `send_date` closer to the current date so emails are sent within a minute.
+- **It is very likely that the emails will be received in your spam folder**
+- Choose a `send_date` closer to the current date/time so emails are sent within a minute.
 Just remember that the API deals with dates in UTC.
-- 
 
 ### Improvements
 - [ ] Implement a callback to Change Letters to `SENT` upon the email provider confirmation.
