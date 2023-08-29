@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: FutureLetter
+  description: |-
+    A REST API that sends letters to your future self
+  contact:
+    email: henrick.kakutalua@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Letters
+    description: Schedule letters to your future self and more
+paths:
+  /v1/letters:
+    post:
+      tags:
+        - Letters
+      summary: Schedule a letter delivery
+      description: Schedule a letter to be delivered into the future
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostLetterBody'
+      responses:
+        '202':
+          description: Letter was successful queued for send
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLetterBody'
+        '400':
+          description: Validation error
+        '500':
+          description: Server error
+
+  /v1/letters/{letterId}:
+    get:
+      tags:
+        - Letters
+      summary: Get a letter by ID
+      description: Get a letter by ID
+      parameters:
+        - name: letterId
+          in: path
+          description: ID of letter to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Letter was successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLetterBody'
+        '404':
+          description: Letter not found
+        '500':
+          description: Server error
+    patch:
+      tags:
+        - Letters
+      summary: Update a letter
+      description: Updates a letter that was not yet delivered
+      parameters:
+        - name: letterId
+          in: path
+          description: ID of letter to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchLetterBody'
+      responses:
+        '204':
+          description: Letter was successfully updated
+        '400':
+          description: Validation error
+        '500':
+          description: Server error
+    delete:
+      tags:
+        - Letters
+      summary: Delete a letter by ID
+      description: Delete a letter by ID
+      parameters:
+        - name: letterId
+          in: path
+          description: ID of letter to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Letter was successfully deleted
+        '404':
+          description: Letter not found
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    PostLetterBody:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Hello
+        content:
+          type: string
+          example: Letter from the future!
+        recipient_email:
+          type: string
+          example: henrick.kakutalua@gmail.com
+        send_date:
+          type: string
+          example: 2023-09-23T00:00:00
+          description: ISO 8601 date time in UTC
+    PatchLetterBody:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Hello
+        content:
+          type: string
+          example: Letter from the future!
+        send_date:
+          type: string
+          example: 2023-09-23T00:00:00
+          description: ISO 8601 date time in UTC
+    GetLetterBody:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 9c1a4d9a-7445-4a88-987a-e883c377008d
+        title:
+          type: string
+          example: Hello
+        content:
+          type: string
+          example: Letter from the future!
+        recipient_email:
+          type: string
+          example: henrick.kakutalua@gmail.com
+        send_date:
+          type: string
+          example: 2023-09-23T00:00:00
+          description: ISO 8601 date time in UTC
+        status:
+          type: string
+          example: PENDING

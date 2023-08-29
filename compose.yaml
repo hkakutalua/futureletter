@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    image: futureletter
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILE=dev
+      - PG_HOST=db:5432
+      - PG_USERNAME=postgres
+      - PG_PASSWORD=postgres
+      - SMTP_HOST=$SMTP_HOST
+      - SMTP_USERNAME=$SMTP_USERNAME
+      - SMTP_PASSWORD=$SMTP_PASSWORD
+      - EMAIL_SEND_CRON=0 * * * * *
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=futureletter
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"

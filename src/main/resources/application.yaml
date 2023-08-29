@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILE:dev}
+  datasource:
+    url: jdbc:postgresql://${PG_HOST:localhost:5432}/futureletter
+    username: ${PG_USERNAME:postgres}
+    password: ${PG_PASSWORD:postgres}
+    type: com.zaxxer.hikari.HikariDataSource
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  mail:
+    host: ${SMTP_HOST}
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+springdoc:
+  swagger-ui:
+    url: /api.yaml
