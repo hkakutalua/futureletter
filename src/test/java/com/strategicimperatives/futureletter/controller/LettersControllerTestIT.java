@@ -138,6 +138,33 @@ class LettersControllerTestIT extends TestContainerFixture {
     }
 
     @Test
+    void patchLetterShouldNotUpdateOmittedFieldsOfLetterAndProduceNoContentResponse() {
+        var letter = new Letter.Builder()
+                .withTitle("Hello, world!")
+                .withBody("...from the future")
+                .toEmail("henrick.kakutalua@gmail.com")
+                .scheduleTo(LocalDateTime.parse("2023-09-23T15:35:00"))
+                .build();
+        lettersRepository.save(letter);
+
+        var requestBody = "{\n" +
+                "  \"send_date\": \"2023-09-25T15:35:00Z\"\n" +
+                "}";
+
+        client.patch().uri(String.format("/v1/letters/%s", letter.getId()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .exchange()
+                .expectStatus().isNoContent();
+
+        Optional<Letter> updatedLetter = lettersRepository.findById(letter.getId());
+        assertTrue(updatedLetter.isPresent());
+        assertThat(updatedLetter.get().getTitle(), equalTo(letter.getTitle()));
+        assertThat(updatedLetter.get().getContent(), equalTo(letter.getContent()));
+        assertThat(updatedLetter.get().getSendDate(), equalTo(LocalDateTime.parse("2023-09-25T15:35:00")));
+    }
+
+    @Test
     void deleteLetterShouldDeleteLetterFromDatabaseAndProduceNoContentResponse() {
         var letter = new Letter.Builder()
                 .withTitle("Hello, world!")

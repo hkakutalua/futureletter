@@ -1,5 +1,6 @@
 package com.strategicimperatives.futureletter.controller.requestbody;
 
+import com.strategicimperatives.futureletter.controller.validators.NotBlankOptional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -7,9 +8,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class PatchLetterRequest {
-    private Optional<@NotBlank @Size(min = 3) String> title = Optional.empty();
+    private Optional<@NotBlankOptional @Size(min = 3) String> title = Optional.empty();
 
-    private Optional<@NotBlank @Size(min = 10) String> content = Optional.empty();
+    private Optional<@NotBlankOptional @Size(min = 10) String> content = Optional.empty();
 
     private Optional<LocalDateTime> sendDate = Optional.empty();
 
